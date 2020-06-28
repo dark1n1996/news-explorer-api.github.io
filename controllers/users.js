@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/user');
@@ -36,7 +36,7 @@ const login = (req, res, next) => {
           if (!matched) {
             throw new UnautorizedError('Неправильные почта или пароль');
           }
-          const token = jwt.sign({ id: user._id }, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+          const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: '7d' });
           res.cookie('jwt', token, { httpOnly: true }).end();
         })
         .catch(next);

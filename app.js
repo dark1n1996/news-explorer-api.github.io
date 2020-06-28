@@ -4,6 +4,10 @@ const app = express();
 const mongoose = require('mongoose');
 
 const { PORT = 3000 } = process.env;
+const bodyParser = require('body-parser');
+const user = require('./routes/users');
+const article = require('./routes/articles');
+const error = require('./middlewars/error');
 
 async function getStarted() {
   try {
@@ -16,9 +20,14 @@ async function getStarted() {
     app.listen(PORT, () => {
       console.log(`Server has been started on ${PORT} PORT...`);
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 }
 
 getStarted();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(user);
+app.use(article);
