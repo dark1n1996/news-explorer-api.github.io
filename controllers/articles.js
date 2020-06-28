@@ -21,13 +21,13 @@ const createArticle = (req, res, next) => {
 };
 const deleteArticle = (req, res, next) => {
   if (mongoose.Types.ObjectId.isValid) {
-    return Article.findById(req.params.id)
-      .then((card) => {
-        if (card) {
-          if (req.user.id == card.owner) {
+    return Article.findById(req.params.articleId)
+      .then((article) => {
+        if (article) {
+          if (req.user.id == article.owner) {
             Article.findByIdAndRemove(req.params.id)
               .then(() => {
-                res.status(200).send({ data: card });
+                res.status(200).send({ data: article });
               })
               .catch(next);
           } else {

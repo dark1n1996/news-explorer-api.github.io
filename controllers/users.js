@@ -43,3 +43,9 @@ const login = (req, res, next) => {
     })
     .catch(next);
 };
+
+module.exports = {
+  readUser,
+  createUser,
+  login,
+};
