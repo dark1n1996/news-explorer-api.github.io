@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 
 const app = express();
 const mongoose = require('mongoose');
@@ -10,7 +11,7 @@ const user = require('./routes/users');
 const article = require('./routes/articles');
 const pageNotExist = require('./middlewars/page-not-exist');
 
-async function getStarted() {
+async function getStarted(next) {
   try {
     mongoose.connect('mongodb://localhost:27017/newsexplorerdb', {
       useNewUrlParser: true,
@@ -22,7 +23,7 @@ async function getStarted() {
       console.log(`Server has been started on ${PORT} PORT...`);
     });
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 }
 
@@ -31,9 +32,9 @@ getStarted();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(pageNotExist);
 app.use(user);
 app.use(article);
+app.use(pageNotExist);
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });

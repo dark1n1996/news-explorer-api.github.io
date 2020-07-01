@@ -11,7 +11,17 @@ const createArticle = (req, res, next) => {
   Article.create({
     keyword, title, text, date, source, link, image, owner: req.user.id,
   })
-    .then((article) => res.status(200).send({ data: article }))
+    .then((article) => res.status(200).send({
+      data: {
+        keyword: article.keyword,
+        title: article.title,
+        text: article.text,
+        date: article.date,
+        source: article.source,
+        link: article.link,
+        image: article.image,
+      },
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Запрос не прошел валидацию'));
@@ -20,14 +30,24 @@ const createArticle = (req, res, next) => {
     });
 };
 const deleteArticle = (req, res, next) => {
-  if (mongoose.Types.ObjectId.isValid) {
+  if (mongoose.Types.ObjectId.isValid()) {
     return Article.findById(req.params.articleId)
       .then((article) => {
         if (article) {
           if (req.user.id == article.owner) {
-            Article.findByIdAndRemove(req.params.id)
+            Article.findByIdAndRemove(req.params.articleId)
               .then(() => {
-                res.status(200).send({ data: article });
+                res.status(200).send({
+                  data: {
+                    keyword: article.keyword,
+                    title: article.title,
+                    text: article.text,
+                    date: article.date,
+                    source: article.source,
+                    link: article.link,
+                    image: article.image,
+                  },
+                });
               })
               .catch(next);
           } else {
@@ -41,6 +61,7 @@ const deleteArticle = (req, res, next) => {
   }
   return next(new BadRequestError('Запрос не прошел валидацию'));
 };
+
 module.exports = {
   createArticle,
   deleteArticle,
