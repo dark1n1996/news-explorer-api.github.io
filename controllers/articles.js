@@ -30,7 +30,7 @@ const createArticle = (req, res, next) => {
     });
 };
 const deleteArticle = (req, res, next) => {
-  if (mongoose.Types.ObjectId.isValid()) {
+  if (mongoose.Types.ObjectId.isValid(req.params.articleId)) {
     return Article.findById(req.params.articleId)
       .then((article) => {
         if (article) {

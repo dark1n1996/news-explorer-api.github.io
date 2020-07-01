@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const { PORT = 3000 } = process.env;
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 const user = require('./routes/users');
 const article = require('./routes/articles');
 const pageNotExist = require('./middlewars/page-not-exist');
@@ -27,15 +28,16 @@ async function getStarted(next) {
   }
 }
 
-getStarted();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(user);
 app.use(article);
 app.use(pageNotExist);
+app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
 });
+
+getStarted();
