@@ -20,7 +20,7 @@ const createUser = (req, res, next) => {
       User.create({ email, password, name })
         .then((user) => {
           User.findByIdAndUpdate(user._id, { password: `${hash}` }, { new: true })
-            .then((client) => res.status(200).send({ data: client }))
+            .then((client) => res.status(201).send({ data: client }))
             .catch(next);
         })
         .catch((err) => {
