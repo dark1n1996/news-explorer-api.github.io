@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { Joi, celebrate } = require('celebrate');
 const validator = require('validator');
 const mongoose = require('mongoose');
-const { createArticle, deleteArticle } = require('../controllers/articles');
+const { getArticles, createArticle, deleteArticle } = require('../controllers/articles');
 const auth = require('../middlewars/auth');
 
 const router = Router();
@@ -21,6 +21,7 @@ const objectIdValidator = (v, h) => {
   return v;
 };
 
+router.get('/articles', auth, getArticles);
 router.post('/articles', celebrate({
   body: Joi.object().keys({
     keyword: Joi.string().required(),

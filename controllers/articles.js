@@ -4,6 +4,12 @@ const NotFoundError = require('../errors/not-found-error'); // 404
 const BadRequestError = require('../errors/bad-request-error'); // 400
 const ForbiddenError = require('../errors/forbidden-error'); // 403
 
+const getArticles = (req, res, next) => {
+  Article.find({ owner: req.user.id })
+    .then((articles) => res.status(200).send({ data: articles }))
+    .catch(next);
+};
+
 const createArticle = (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
@@ -65,4 +71,5 @@ const deleteArticle = (req, res, next) => {
 module.exports = {
   createArticle,
   deleteArticle,
+  getArticles,
 };
