@@ -8,7 +8,7 @@ const BadRequestError = require('../errors/bad-request-error'); // 400
 const readUser = (req, res, next) => {
   User.findById(req.user.id)
     .then((user) => {
-      res.status(200).send({ data: user });
+      res.status(200).send({ user });
     })
     .catch(next);
 };
@@ -20,7 +20,7 @@ const createUser = (req, res, next) => {
       User.create({ email, password, name })
         .then((user) => {
           User.findByIdAndUpdate(user._id, { password: `${hash}` }, { new: true })
-            .then((client) => res.status(201).send({ data: client }))
+            .then((client) => res.status(201).send({ client }))
             .catch(next);
         })
         .catch((err) => {
@@ -49,7 +49,10 @@ const login = (req, res, next) => {
             throw new UnautorizedError('Неправильные почта или пароль');
           }
           const token = jwt.sign({ id: user._id }, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-          res.cookie('jwt', token, { httpOnly: true }).end();
+          res.cookie('jwt', token, { httpOnly: false, maxAge: 3600000 * 7 * 24, domain: 'localhost' }).send( {
+            email: user.email,
+            name: user.name
+          }).end();
         })
         .catch(next);
     })

@@ -11,6 +11,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { requestLogger, errorLogger } = require('./middlewars/loggers');
+const cors = require('cors');
 const router = require('./routes/index');
 const centralErrorHandler = require('./middlewars/central-error-handler');
 
@@ -41,6 +42,14 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(limiter);
 app.use(requestLogger);
+// Добавить в миддлвэр!!!
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+  res.header('Access-Control-Allow-Credentials', 'true')
+  next();
+});
 app.use(router);
 app.use(errorLogger);
 app.use(errors());

@@ -6,7 +6,7 @@ const ForbiddenError = require('../errors/forbidden-error'); // 403
 
 const getArticles = (req, res, next) => {
   Article.find({ owner: req.user.id })
-    .then((articles) => res.status(200).send({ data: articles }))
+    .then((articles) => res.status(200).send({ articles }))
     .catch(next);
 };
 
@@ -18,15 +18,13 @@ const createArticle = (req, res, next) => {
     keyword, title, text, date, source, link, image, owner: req.user.id,
   })
     .then((article) => res.status(201).send({
-      data: {
-        keyword: article.keyword,
-        title: article.title,
-        text: article.text,
-        date: article.date,
-        source: article.source,
-        link: article.link,
-        image: article.image,
-      },
+      keyword: article.keyword,
+      title: article.title,
+      text: article.text,
+      date: article.date,
+      source: article.source,
+      link: article.link,
+      image: article.image,
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -44,15 +42,13 @@ const deleteArticle = (req, res, next) => {
             Article.findByIdAndRemove(req.params.articleId)
               .then(() => {
                 res.status(200).send({
-                  data: {
-                    keyword: article.keyword,
-                    title: article.title,
-                    text: article.text,
-                    date: article.date,
-                    source: article.source,
-                    link: article.link,
-                    image: article.image,
-                  },
+                  keyword: article.keyword,
+                  title: article.title,
+                  text: article.text,
+                  date: article.date,
+                  source: article.source,
+                  link: article.link,
+                  image: article.image,
                 });
               })
               .catch(next);
